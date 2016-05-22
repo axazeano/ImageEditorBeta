@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.axazeano.effects.EffectsHolder;
+import org.axazeano.history.HistoryHolder;
 import org.axazeano.view.EffectsLayoutController;
 import org.axazeano.view.HistogramLayoutController;
 import org.axazeano.view.RootLayoutController;
@@ -19,9 +20,12 @@ public class Main extends Application {
     private RootLayoutController rootLayoutController;
     private EffectsLayoutController effectsLayoutController;
     private HistogramLayoutController histogramLayoutController;
+
+    /// Singletons
     private ImagesHolder imagesHolder = ImagesHolder.INSTANCE;
     private Histogram histogram = Histogram.INSTANCE;
     private EffectsHolder effectsHolder = EffectsHolder.INSTANCE;
+    private HistoryHolder history = HistoryHolder.INSTANCE;
 
 
     @Override
@@ -50,6 +54,7 @@ public class Main extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             rootLayoutController = loader.getController();
+            history.addObserver(rootLayoutController);
             imagesHolder.addObserver(rootLayoutController);
             rootLayoutController.setMainApp(this);
 

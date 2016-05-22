@@ -5,6 +5,8 @@ import javafx.scene.layout.AnchorPane;
 import org.axazeano.effects.stylized.Greyscale;
 import org.axazeano.effects.stylized.Greyworld;
 import org.axazeano.Main;
+import org.axazeano.effects.transform.Rotate;
+import org.axazeano.view.OneControlEffectSettingsController;
 import org.axazeano.view.SimpleEffectSettingsLayoutController;
 
 import java.io.IOException;
@@ -48,6 +50,21 @@ public class EffectsHolder {
                 AnchorPane effect = loader.load();
                 SimpleEffectSettingsLayoutController controller = loader.getController();
                 controller.setEffect(new Greyworld());
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Rotate", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.OneControlEffectSettings));
+            try {
+                AnchorPane effect = loader.load();
+                OneControlEffectSettingsController controller = loader.getController();
+                Rotate rotate = new Rotate();
+                controller.setEffect(rotate);
                 parent.getChildren().add(effect);
                 controller.setParent(parent);
             } catch (IOException e) {

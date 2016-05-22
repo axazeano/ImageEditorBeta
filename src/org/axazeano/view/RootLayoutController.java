@@ -3,6 +3,7 @@ package org.axazeano.view;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -11,6 +12,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import org.axazeano.ImagesHolder;
 import org.axazeano.Main;
+import org.axazeano.history.HistoryHolder;
+import org.axazeano.history.HistoryItem;
+
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,6 +28,7 @@ public class RootLayoutController implements Observer {
 
     private Main mainApp;
     private ImagesHolder imagesHolder = ImagesHolder.INSTANCE;
+    private HistoryHolder history = HistoryHolder.INSTANCE;
 
     @FXML
     private ImageView originalImage;
@@ -135,18 +140,18 @@ public class RootLayoutController implements Observer {
         FileChooser fileChooser = new FileChooser();
         String fileName = fileChooser.showOpenDialog(mainApp.getPrimaryStage()).getAbsolutePath();
         if (!Objects.equals(fileName, "")) {
-            imagesHolder.loadImage(fileName);
+            loadImage(fileName);
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if (imagesHolder.shouldBeUpdatedBoth) {
-            originalImage.setImage(imagesHolder.getOriginalImage());
-            modifiedImage.setImage(imagesHolder.getModifiedImage());
-            calculateScaleFactor();
-        } else {
-            modifiedImage.setImage(imagesHolder.getModifiedImage());
-        }
+        modifiedImage.setImage(history.getCurrentImage());
+    }
+
+    private void loadImage(String filePath) {
+        history.add(new HistoryItem("Load image", new Image("file:"+filePath), false));
+        originalImage.setImage(history.getOriginalImage());
+        modifiedImage.setImage(history.getOriginalImage());
     }
 }

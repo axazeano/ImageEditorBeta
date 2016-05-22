@@ -36,6 +36,11 @@
                   </AnchorPane>
             </content>
           </TitledPane>
+            <TitledPane animated="false" text="OpenCV">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </TitledPane>
         </panes>
       </Accordion>
       <AnchorPane fx:id="effectSettings" layoutY="295.0" prefHeight="344.0" prefWidth="290.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />

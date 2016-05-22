@@ -71,6 +71,9 @@ public class EffectsLayoutController {
             case "Greyworld":
                 effect = effectsHolder.effectsList.get("Greyworld");
                 break;
+            case "Rotate":
+                effect = effectsHolder.effectsList.get("Rotate");
+                break;
         }
         effect.operation(effectSettings);
     }

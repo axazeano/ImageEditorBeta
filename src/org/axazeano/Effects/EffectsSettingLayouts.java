@@ -5,4 +5,5 @@ package org.axazeano.effects;
  */
 public class EffectsSettingLayouts {
     final static String SimpleEffectSettingsLayout = "view/SimpleEffectSettingsLayout.fxml";
+    final static String OneControlEffectSettings = "view/OneControlEffectSettingsLayout.fxml";
 }

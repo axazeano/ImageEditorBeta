@@ -7,53 +7,42 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.axazeano.effects.BaseEffect;
+import org.axazeano.history.HistoryHolder;
 
 /**
  * Created by vladimir on 15.05.2016.
  */
 public class SimpleEffectSettingsLayoutController {
-    public void setEffect(BaseEffect effect) {
-        this.effect = effect;
-        effectName.setText(this.effect.name);
-        effectDescription.setText(this.effect.description);
-    }
+    protected BaseEffect effect;
 
-    private BaseEffect effect;
-    private String name;
-    private String description;
+    private HistoryHolder history = HistoryHolder.INSTANCE;
 
     public void setParent(Pane parent) {
         this.parent = parent;
     }
 
-    private Pane parent;
+    protected Pane parent;
 
     @FXML
-    private AnchorPane pane;
+    protected AnchorPane pane;
 
     @FXML
-    private ProgressIndicator progressIndicator;
+    protected ProgressIndicator progressIndicator;
 
     @FXML
-    private Button okButton;
+    protected Button okButton;
 
     @FXML
-    private Button cancelButton;
+    protected Button cancelButton;
 
     @FXML
-    private Button previewButton;
+    protected Button previewButton;
 
     @FXML
-    private Label effectName;
+    protected Label effectName;
 
     @FXML
-    private Label effectDescription;
-
-//    public SimpleEffectSettingsLayoutController(BaseEffect effect) {
-//        this.name = effect.name;
-//        this.description = effect.description;
-//        this.effect = effect;
-//    }
+    protected Label effectDescription;
 
     @FXML
     public void initialize() {
@@ -67,7 +56,27 @@ public class SimpleEffectSettingsLayoutController {
         effect.applyEffect();
     }
 
-    @FXML void handleCancel() {
+    @FXML
+    public void handleApply() {
+        if (history.getCurrentItem().isTemporary()) {
+            history.applyEffect();
+        } else {
+            effect.applyEffect();
+            history.applyEffect();
+        }
+    }
+
+    @FXML
+    public void handleCancel() {
         parent.getChildren().remove(0);
+        if (history.getCurrentItem().isTemporary()) {
+            history.removeCurrentElement();
+        }
+    }
+
+    public void setEffect(BaseEffect effect) {
+        this.effect = effect;
+        effectName.setText(this.effect.name);
+        effectDescription.setText(this.effect.description);
     }
 }

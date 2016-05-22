@@ -1,5 +1,6 @@
 package org.axazeano.effects.stylized;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.axazeano.effects.BaseEffect;
 
@@ -24,7 +25,7 @@ public class Greyworld extends BaseEffect {
     }
 
     @Override
-    protected void proceedEffect() {
+    protected Image proceedEffect() {
         calculateDivValues();
         for (int y =  selection.getStartY(); y < selection.getHeight(); y++)
         {
@@ -37,7 +38,8 @@ public class Greyworld extends BaseEffect {
                 pixelWriter.setColor(x, y, Color.rgb(redNew, greenNew, blueNew));
             }
         }
-        imagesHolder.setModifiedImage(writableImage);
+//        imagesHolder.setModifiedImage(writableImage);
+        return null;
     }
 
     private void calculateSumValues()
@@ -58,7 +60,7 @@ public class Greyworld extends BaseEffect {
     {
         calculateSumValues();
 
-        int size = (int) (imagesHolder.getOriginalImage().getHeight() * imagesHolder.getOriginalImage().getWidth());
+        int size = (int) (history.getOriginalImage().getHeight() * history.getOriginalImage().getWidth());
         redGlobal = 1d / size * redSum;
         greenGlobal = 1d / size * greenSum;
         blueGlobal = 1d / size * blueSum;
