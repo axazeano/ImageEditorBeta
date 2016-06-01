@@ -3,6 +3,7 @@ package org.axazeano;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
+import org.axazeano.history.HistoryHolder;
 
 import java.lang.reflect.Array;
 import java.util.Observable;
@@ -33,10 +34,10 @@ public class Histogram extends Observable implements Observer {
     private int[] blue;
     private int[] lightness;
     private PixelReader pixelReader;
+    private HistoryHolder history = HistoryHolder.INSTANCE;
     
     public static final Histogram INSTANCE = new Histogram();
 
-    private ImagesHolder imagesHolder = ImagesHolder.INSTANCE;
 
     public Histogram() {
         cleanHistogram();
@@ -52,14 +53,14 @@ public class Histogram extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         cleanHistogram();
-        pixelReader = imagesHolder.getModifiedImage().getPixelReader();
+        pixelReader = history.getCurrentImage().getPixelReader();
         recalculateHistogram();
         setChanged();
         notifyObservers();
     }
 
     private void recalculateHistogram() {
-        Image image = imagesHolder.getModifiedImage();
+        Image image = history.getCurrentImage();
         int height = (int) image.getHeight();
         int width = (int) image.getWidth();
         for (int y=0; y < height; y++) {

@@ -1,4 +1,4 @@
-package org.axazeano.effects.stylized;
+package org.axazeano.effects.colorCorrection;
 
 
 
@@ -21,7 +21,7 @@ public class Greyscale extends BaseEffect {
     }
 
     @Override
-    protected Image proceedEffect() {
+    protected void proceedEffect() {
         for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
             for (int x = selection.getStartX(); x < selection.getWidth(); x++) {
                 Color originalColor = pixelReader.getColor(x, y);
@@ -29,6 +29,5 @@ public class Greyscale extends BaseEffect {
                 pixelWriter.setColor(x, y, Color.rgb(newColorValue, newColorValue, newColorValue));
             }
         }
-        return null;
     }
 }

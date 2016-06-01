@@ -31,7 +31,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        imagesHolder.addObserver(histogram);
+        history.addObserver(histogram);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Image Editor Beta");
 

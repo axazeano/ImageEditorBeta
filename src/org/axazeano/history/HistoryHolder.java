@@ -75,5 +75,7 @@ public class HistoryHolder extends Observable {
     public void removeCurrentElement() {
         history.remove(head);
         head--;
+        setChanged();
+        notifyObservers();
     }
 }

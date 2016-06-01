@@ -12,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import org.axazeano.ImagesHolder;
 import org.axazeano.Main;
+import org.axazeano.effects.Selection;
 import org.axazeano.history.HistoryHolder;
 import org.axazeano.history.HistoryItem;
 
@@ -29,6 +30,7 @@ public class RootLayoutController implements Observer {
     private Main mainApp;
     private ImagesHolder imagesHolder = ImagesHolder.INSTANCE;
     private HistoryHolder history = HistoryHolder.INSTANCE;
+    private Selection selection = Selection.INSTANCE;
 
     @FXML
     private ImageView originalImage;
@@ -47,6 +49,7 @@ public class RootLayoutController implements Observer {
 
     @FXML
     public AnchorPane rootPane;
+
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
@@ -153,5 +156,6 @@ public class RootLayoutController implements Observer {
         history.add(new HistoryItem("Load image", new Image("file:"+filePath), false));
         originalImage.setImage(history.getOriginalImage());
         modifiedImage.setImage(history.getOriginalImage());
+        selection.updateSelection(0, 0, (int) history.getCurrentImage().getWidth(), (int) history.getCurrentImage().getHeight());
     }
 }

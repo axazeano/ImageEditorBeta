@@ -1,7 +1,5 @@
-package org.axazeano.effects.transform;
+package org.axazeano.effects.colorCorrection.transform;
 
-import javafx.scene.image.Image;
-import org.axazeano.effects.BaseEffect;
 import org.axazeano.effects.BaseEffectOneParam;
 
 /**
@@ -29,7 +27,7 @@ public class Rotate extends BaseEffectOneParam{
     }
 
     @Override
-    protected Image proceedEffect() {
+    protected void proceedEffect() {
         for (int y = selection.getStartY(); y < selection.getHeight(); ++y)
         {
             for (int x = selection.getStartX(); x < selection.getWidth(); ++x)
@@ -42,8 +40,5 @@ public class Rotate extends BaseEffectOneParam{
                 pixelWriter.setColor(newX, newY, pixelReader.getColor(x, y));
             }
         }
-        return null;
     }
-
-
 }

@@ -1,13 +1,13 @@
 package org.axazeano.view;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.axazeano.effects.BaseEffect;
 import org.axazeano.history.HistoryHolder;
+
+import java.util.Optional;
 
 /**
  * Created by vladimir on 15.05.2016.
@@ -64,16 +64,37 @@ public class SimpleEffectSettingsLayoutController {
             effect.applyEffect();
             history.applyEffect();
         }
+        parent.getChildren().remove(0);
     }
 
     @FXML
     public void handleCancel() {
+        showCancelDialog();
+    }
+
+    @FXML
+    private void cancel() {
         parent.getChildren().remove(0);
         if (history.getCurrentItem().isTemporary()) {
             history.removeCurrentElement();
         }
     }
 
+    private void showCancelDialog() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Cancel dialog");
+        alert.setContentText("Do you want cancel this effect?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            cancel();
+        } else {
+            alert.close();
+        }
+    }
+
+    @FXML
     public void setEffect(BaseEffect effect) {
         this.effect = effect;
         effectName.setText(this.effect.name);

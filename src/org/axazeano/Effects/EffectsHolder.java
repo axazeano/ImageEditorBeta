@@ -2,10 +2,9 @@ package org.axazeano.effects;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import org.axazeano.effects.stylized.Greyscale;
-import org.axazeano.effects.stylized.Greyworld;
+import org.axazeano.effects.colorCorrection.*;
 import org.axazeano.Main;
-import org.axazeano.effects.transform.Rotate;
+import org.axazeano.effects.colorCorrection.transform.Rotate;
 import org.axazeano.view.OneControlEffectSettingsController;
 import org.axazeano.view.SimpleEffectSettingsLayoutController;
 
@@ -65,6 +64,76 @@ public class EffectsHolder {
                 OneControlEffectSettingsController controller = loader.getController();
                 Rotate rotate = new Rotate();
                 controller.setEffect(rotate);
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Linear Correction", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.SimpleEffectSettingsLayout));
+            try {
+                AnchorPane effect = loader.load();
+                SimpleEffectSettingsLayoutController controller = loader.getController();
+                controller.setEffect(new LinearCorrection());
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Root Correction", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.SimpleEffectSettingsLayout));
+            try {
+                AnchorPane effect = loader.load();
+                SimpleEffectSettingsLayoutController controller = loader.getController();
+                controller.setEffect(new RootCorrection());
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Log Correction", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.SimpleEffectSettingsLayout));
+            try {
+                AnchorPane effect = loader.load();
+                SimpleEffectSettingsLayoutController controller = loader.getController();
+                controller.setEffect(new LogCorrection());
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Square Correction", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.SimpleEffectSettingsLayout));
+            try {
+                AnchorPane effect = loader.load();
+                SimpleEffectSettingsLayoutController controller = loader.getController();
+                controller.setEffect(new SquareCorrection());
+                parent.getChildren().add(effect);
+                controller.setParent(parent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        effectsList.put("Cube Correction", (AnchorPane parent) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource(EffectsSettingLayouts.SimpleEffectSettingsLayout));
+            try {
+                AnchorPane effect = loader.load();
+                SimpleEffectSettingsLayoutController controller = loader.getController();
+                controller.setEffect(new CubeCorrection());
                 parent.getChildren().add(effect);
                 controller.setParent(parent);
             } catch (IOException e) {

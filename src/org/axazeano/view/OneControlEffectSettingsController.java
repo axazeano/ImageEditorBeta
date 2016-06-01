@@ -3,6 +3,7 @@ package org.axazeano.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import org.axazeano.effects.BaseEffect;
 import org.axazeano.effects.BaseEffectOneParam;
 
@@ -21,6 +22,7 @@ public class OneControlEffectSettingsController extends SimpleEffectSettingsLayo
     @FXML
     public void initialize() {
         cancelButton.setStyle("-fx-base: red;");
+        parameterValue.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 1));
     }
 
     public void setEffect(BaseEffectOneParam effect) {
