@@ -13,7 +13,9 @@ import static org.bytedeco.javacpp.avutil.M_PI;
  */
 
 
-
+/**
+ * Wave effects
+ */
 public class Waves extends BaseEffectThreeParam {
     static {
         name = "Waves";
@@ -22,15 +24,24 @@ public class Waves extends BaseEffectThreeParam {
         secondParameter = "Strength";
         thirdParameter = "Type";
     }
-
     public enum WaveType {
         Horizontal,
         Vertical,
         ZigZag
     }
 
+
+    /**
+     * Count of waves
+     */
     private int count;
+    /**
+     * Strength of waves
+     */
     private int strength;
+    /**
+     * Type of waves. Can be Horizontal, Vertical, ZigZag
+     */
     private WaveType waveType;
     private Random random;
 

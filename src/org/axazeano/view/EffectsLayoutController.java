@@ -30,7 +30,7 @@ public class EffectsLayoutController {
     public static final ObservableList<String> stylizedEffects =
             FXCollections.observableArrayList();
 
-    public static final ObservableList colorCorrectionEffects =
+    public static final ObservableList<String> colorCorrectionEffects =
             FXCollections.observableArrayList();
 
 
@@ -39,10 +39,10 @@ public class EffectsLayoutController {
     private ListView<String> colorCorrection;
 
     @FXML
-    ListView stylized;
+    ListView<String> stylized;
 
     @FXML
-    ListView transform;
+    ListView<String> transform;
 
     @FXML
     private AnchorPane effectSettings;
@@ -75,12 +75,23 @@ public class EffectsLayoutController {
             }
         });
 
-        transformEffects.addAll("Rotate", "Scale");
+        transformEffects.addAll(EffectsHolder.EffectsNames.rotate);
         transform.setItems(transformEffects);
 
-        colorCorrectionEffects.addAll("Greyscale", "Greyworld", "Linear Correction", "Root Correction", "Log Correction", "Square Correction", "Cube Correction");
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.greyscale);
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.greyworld);
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.linearCorrection);
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.rootCorrection);
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.squareCorrection);
+        colorCorrectionEffects.add(EffectsHolder.EffectsNames.cubeCorrection);
         colorCorrection.setItems(colorCorrectionEffects);
 
+        stylizedEffects.add(EffectsHolder.EffectsNames.waves);
+        stylizedEffects.add(EffectsHolder.EffectsNames.wind);
+        stylizedEffects.add(EffectsHolder.EffectsNames.glass);
+        stylizedEffects.add(EffectsHolder.EffectsNames.randomJitter);
+        stylizedEffects.add(EffectsHolder.EffectsNames.pixelezation);
+        stylized.setItems(stylizedEffects);
 
         transform.getSelectionModel()
                 .selectedItemProperty()
@@ -90,41 +101,25 @@ public class EffectsLayoutController {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> loadEffectLayout((String) newValue));
 
+        stylized.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> loadEffectLayout((String) newValue));
+
     }
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
 
+
+    /**
+     * Load effect layout by name of an effect
+     * @param name name of the effect
+     */
     private void loadEffectLayout(String name) {
         effectSettings.getChildren().clear();
         EffectAction effect = null;
-        switch (name) {
-            case "Greyscale":
-                effect = effectsHolder.effectsList.get("Greyscale");
-                break;
-            case "Greyworld":
-                effect = effectsHolder.effectsList.get("Greyworld");
-                break;
-            case "Rotate":
-                effect = effectsHolder.effectsList.get("Rotate");
-                break;
-            case "Linear Correction":
-                effect = effectsHolder.effectsList.get("Linear Correction");
-                break;
-            case "Root Correction":
-                effect = effectsHolder.effectsList.get("Root Correction");
-                break;
-            case "Log Correction":
-                effect = effectsHolder.effectsList.get("Log Correction");
-                break;
-            case "Square Correction":
-                effect = effectsHolder.effectsList.get("Square Correction");
-                break;
-            case "Cube Correction":
-                effect = effectsHolder.effectsList.get("Cube Correction");
-                break;
-        }
+        effect = effectsHolder.effectsList.get(name);
         effect.operation(effectSettings);
     }
 }
