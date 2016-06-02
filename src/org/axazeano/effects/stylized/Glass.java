@@ -59,17 +59,13 @@ public class Glass extends BaseEffectOneParam {
 
     private void color() {
         WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();
-        int[] pixels = new int[selection.getWidth() * selection.getHeight()]; // Buffer for all pixels
-        pixelReader.getPixels(0, 0, selection.getWidth(), selection.getHeight(), format, pixels, 0, selection.getWidth()); // get all pixels by argb format
-        int alpha = 0xFF << 24;
         for (int x = 0; x < selection.getWidth(); x++) {
             for (int y = 0; y < selection.getHeight(); y++) {
                 int index = x + y * selection.getWidth();
                 int argb = pixels[index];
-
                 int newX = x - (random.nextInt() % this.strength + 1);
                 // Getting color of current pixel
-                Color color = pixelReader.getColor(x, y);
+                Color color = Color.rgb((argb)&0xFF, (argb>>8)&0xFF, (argb>>16)&0xFF, (argb>>24)&0xFF);
                 // Applying color for new prepared matrix's pixel.
                 if (newX > 0 && newX < selection.getWidth() && y > 0 && y < selection.getHeight()) {
                     pixelWriter.setColor(newX, y, color);
