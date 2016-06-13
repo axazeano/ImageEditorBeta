@@ -12,6 +12,12 @@ import java.util.Observer;
 /**
  * Created by vladimir on 15.05.2016.
  */
+/*
+* Histogram
+* The singleton, which contains four arrays (for each chanel + for lightness) for build the histogram
+* Calculates values based on current image from history
+* 
+* */
 public class Histogram extends Observable implements Observer {
     public int[] getRed() {
         return red;
