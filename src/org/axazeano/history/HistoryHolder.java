@@ -1,6 +1,7 @@
 package org.axazeano.history;
 
 import javafx.scene.image.Image;
+import org.axazeano.EditableImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,12 @@ public class HistoryHolder extends Observable {
     }
 
     public void undo() {
-        if (head > 0) {
-            head--;
-            setChanged();
-            notifyObservers();
+        if (head < 0) {
+            throw new UnderflowException();
         }
+        head--;
+        setChanged();
+        notifyObservers();
     }
 
     public List<HistoryItem> getHistory() {
@@ -32,12 +34,14 @@ public class HistoryHolder extends Observable {
     }
 
     public void redo() {
-        if (head < history.size()) {
-            head++;
-            setChanged();
-            notifyObservers();
+        if (head >= history.size()) {
+            throw new OverflowException();
         }
+        head++;
+        setChanged();
+        notifyObservers();
     }
+
     public void add(HistoryItem newItem) {
         head++;
         history.add(newItem);
@@ -52,30 +56,36 @@ public class HistoryHolder extends Observable {
         notifyObservers();
     }
 
+    public void removeCurrentElement() {
+        history.remove(head);
+        head--;
+        setChanged();
+        notifyObservers();
+    }
+
     public HistoryItem getCurrentItem() {
         return history.get(head);
     }
 
-    public Image getCurrentImage() {
-        return history.get(head).getState();
+    public EditableImage getCurrentEditableImage() {
+        return history.get(head).getEditableImage();
     }
 
     public HistoryItem getOriginalItem() {
         return history.get(0);
     }
 
-    public Image getOriginalImage() {
-        return history.get(0).getState();
+    public EditableImage getOriginalEditableImage() {
+        return history.get(0).getEditableImage();
     }
 
     public void applyEffect() {
         history.get(head).setTemporary(false);
     }
 
-    public void removeCurrentElement() {
-        history.remove(head);
-        head--;
-        setChanged();
-        notifyObservers();
+    public class OverflowException extends RuntimeException {
+    }
+
+    public class UnderflowException extends RuntimeException {
     }
 }
