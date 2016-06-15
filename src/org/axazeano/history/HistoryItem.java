@@ -3,6 +3,7 @@ package org.axazeano.history;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.image.Image;
+import org.axazeano.EditableImage;
 
 /**
  * Created by vladimir on 18.05.2016.
@@ -10,7 +11,7 @@ import javafx.scene.image.Image;
 public class HistoryItem {
     private SimpleStringProperty name;
     private SimpleBooleanProperty isTemporary;
-    private Image state;
+    private EditableImage editableImage;
 
     public void setTemporary(boolean temporary) {
         isTemporary = new SimpleBooleanProperty(temporary);
@@ -20,17 +21,17 @@ public class HistoryItem {
         return name.getValue();
     }
 
-    public Image getState() {
-        return state;
+    public EditableImage getEditableImage() {
+        return editableImage;
     }
 
     public boolean isTemporary() {
         return isTemporary.getValue();
     }
 
-    public HistoryItem(String name, Image state, boolean isTemporary) {
+    public HistoryItem(String name, EditableImage editableImage, boolean isTemporary) {
         this.name = new SimpleStringProperty(name);
-        this.state = state;
+        this.editableImage = editableImage;
         this.isTemporary = new SimpleBooleanProperty(isTemporary);
     }
 }
