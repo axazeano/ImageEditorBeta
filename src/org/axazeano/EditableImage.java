@@ -14,6 +14,10 @@ public class EditableImage {
     private final WritablePixelFormat<IntBuffer> format =
             WritablePixelFormat.getIntArgbInstance();
 
+    public EditableImage(Image image) {
+        this.image = image;
+    }
+
     public Image getImage() {
         return image;
     }
@@ -37,5 +41,13 @@ public class EditableImage {
         pixelWriter.setPixels(0, 0, (int) image.getWidth(), (int) image.getHeight(), format, pixelsArray, 0,
                 (int) image.getWidth());
         this.image = writableImage;
+    }
+
+    public int getHeight() {
+        return (int) image.getHeight();
+    }
+
+    public int getWeight() {
+        return (int) image.getWidth();
     }
 }
