@@ -1,7 +1,5 @@
 package org.axazeano;
 
-import java.awt.*;
-
 /**
  * Created by vladimir on 15.06.16.
  */
@@ -10,11 +8,14 @@ public class ARGBColor {
     public static final int COLOR_MIN_VALUE = 0;
     public static final int ALPHA_MAX_VALUE = 99;
     public static final int ALPHA_MIN_VALUE = 0;
-    private int color;
+    private int color = 0;
     private int red;
     private int green;
     private int blue;
     private int alpha;
+
+    public ARGBColor() {
+    }
 
     public ARGBColor(int color) {
         this.color = color;
@@ -46,8 +47,7 @@ public class ARGBColor {
     public void setRed(int red) {
         if (red > COLOR_MAX_VALUE) {
             this.red = COLOR_MAX_VALUE;
-        }
-        if (red < COLOR_MIN_VALUE) {
+        } else if (red < COLOR_MIN_VALUE) {
             this.red = COLOR_MIN_VALUE;
         } else {
             this.red = red;
@@ -57,8 +57,7 @@ public class ARGBColor {
     public void setGreen(int green) {
         if (green > COLOR_MAX_VALUE) {
             this.green = COLOR_MAX_VALUE;
-        }
-        if (red < COLOR_MIN_VALUE) {
+        } else if (red < COLOR_MIN_VALUE) {
             this.green = COLOR_MIN_VALUE;
         } else {
             this.green = green;
@@ -68,8 +67,7 @@ public class ARGBColor {
     public void setBlue(int blue) {
         if (blue > COLOR_MAX_VALUE) {
             this.blue = COLOR_MAX_VALUE;
-        }
-        if (blue < COLOR_MIN_VALUE) {
+        } else if (blue < COLOR_MIN_VALUE) {
             this.blue = COLOR_MIN_VALUE;
         } else {
             this.blue = blue;
@@ -79,8 +77,7 @@ public class ARGBColor {
     public void setAlpha(int alpha) {
         if (alpha > ALPHA_MAX_VALUE) {
             this.alpha = ALPHA_MAX_VALUE;
-        }
-        if (alpha < ALPHA_MIN_VALUE) {
+        } else if (alpha < ALPHA_MIN_VALUE) {
             this.alpha = ALPHA_MIN_VALUE;
         } else {
             this.alpha = alpha;
