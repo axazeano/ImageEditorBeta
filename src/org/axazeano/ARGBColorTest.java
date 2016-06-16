@@ -1,11 +1,9 @@
 package org.axazeano;
 
-import org.omg.CORBA.Object;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by vladimir on 16.06.16.
@@ -13,8 +11,8 @@ import static org.testng.Assert.*;
 public class ARGBColorTest {
     private ARGBColor color;
 
-    @BeforeMethod
-    public void beforeEachMethod() {
+    @BeforeClass
+    public void beforeClass() {
         color = new ARGBColor(0);
     }
 
@@ -50,11 +48,11 @@ public class ARGBColorTest {
 
     @Test(priority = 1)
     public void testSetAlpha() throws Exception {
-        color.setRed(50);
-        assertEquals(color.getRed(), 50);
+        color.setAlpha(50);
+        assertEquals(color.getAlpha(), 50);
 
-        color.setRed(300);
-        assertEquals(color.getRed(), 99);
+        color.setAlpha(300);
+        assertEquals(color.getAlpha(), 99);
 
     }
 }
