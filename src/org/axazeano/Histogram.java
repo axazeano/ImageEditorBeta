@@ -1,11 +1,7 @@
 package org.axazeano;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.paint.Color;
 import org.axazeano.history.HistoryHolder;
 
-import java.lang.reflect.Array;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,7 +35,7 @@ public class Histogram extends Observable implements Observer {
     private int[] green;
     private int[] blue;
     private int[] lightness;
-    private PixelReader pixelReader;
+    private int[] pixelsArray;
     private HistoryHolder history = HistoryHolder.INSTANCE;
     
     public static final Histogram INSTANCE = new Histogram();
@@ -59,24 +55,19 @@ public class Histogram extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         cleanHistogram();
-        pixelReader = history.getCurrentImage().getPixelReader();
+        pixelsArray = history.getCurrentEditableImage().getPixelsArray();
         recalculateHistogram();
         setChanged();
         notifyObservers();
     }
 
     private void recalculateHistogram() {
-        Image image = history.getCurrentImage();
-        int height = (int) image.getHeight();
-        int width = (int) image.getWidth();
-        for (int y=0; y < height; y++) {
-            for (int x=0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                red[(int) (color.getRed() * 255)]++;
-                green[(int) (color.getGreen() * 255)]++;
-                blue[(int) (color.getBlue() * 255)]++;
-                lightness[Math.min((int) ((color.getRed() + color.getGreen() + color.getBlue()) / 3  * 255), 255)]++;
-            }
+        for (int pixel : pixelsArray) {
+            ARGBColor color = new ARGBColor(pixel);
+            red[color.getRed()]++;
+            green[color.getGreen()]++;
+            blue[color.getBlue()]++;
+            lightness[Math.min((int) ((color.getRed() + color.getGreen() + color.getBlue()) / 3), 255)]++;
         }
     }
 }
