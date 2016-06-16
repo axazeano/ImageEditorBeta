@@ -10,11 +10,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import org.axazeano.ImagesHolder;
 import org.axazeano.Main;
 import org.axazeano.effects.Selection;
 import org.axazeano.history.HistoryHolder;
-import org.axazeano.history.HistoryItem;
 
 import java.util.Objects;
 import java.util.Observable;
@@ -28,7 +26,6 @@ import static java.lang.Math.abs;
 public class RootLayoutController implements Observer {
 
     private Main mainApp;
-    private ImagesHolder imagesHolder = ImagesHolder.INSTANCE;
     private HistoryHolder history = HistoryHolder.INSTANCE;
     private Selection selection = Selection.INSTANCE;
 
@@ -123,8 +120,8 @@ public class RootLayoutController implements Observer {
     }
 
     private void calculateScaleFactor() {
-        scaleX = imagesHolder.getOriginalImage().getWidth() / originalImage.getBoundsInParent().getWidth();
-        scaleY = imagesHolder.getOriginalImage().getHeight() / originalImage.getBoundsInParent().getHeight();
+//        scaleX = imagesHolder.getOriginalImage().getWidth() / originalImage.getBoundsInParent().getWidth();
+//        scaleY = imagesHolder.getOriginalImage().getHeight() / originalImage.getBoundsInParent().getHeight();
     }
 
     private void drawSelectionRectangle() {
@@ -141,21 +138,22 @@ public class RootLayoutController implements Observer {
     @FXML
     private void handleOpen() {
         FileChooser fileChooser = new FileChooser();
-        String fileName = fileChooser.showOpenDialog(mainApp.getPrimaryStage()).getAbsolutePath();
+        String fileName;
+        try {
+            fileName = fileChooser.showOpenDialog(mainApp.getPrimaryStage()).getAbsolutePath();
+        } catch (NullPointerException e) {
+            fileName = "";
+        }
         if (!Objects.equals(fileName, "")) {
-            loadImage(fileName);
+            Image image = new Image("file:" + fileName);
+            history.init(image);
+            originalImage.setImage(image);
+            modifiedImage.setImage(image);
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        modifiedImage.setImage(history.getCurrentImage());
-    }
-
-    private void loadImage(String filePath) {
-        history.add(new HistoryItem("Load image", new Image("file:"+filePath), false));
-        originalImage.setImage(history.getOriginalImage());
-        modifiedImage.setImage(history.getOriginalImage());
-        selection.updateSelection(0, 0, (int) history.getCurrentImage().getWidth(), (int) history.getCurrentImage().getHeight());
+        System.out.print("test");
     }
 }
