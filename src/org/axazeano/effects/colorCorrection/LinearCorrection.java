@@ -1,7 +1,7 @@
 package org.axazeano.effects.colorCorrection;
 
-import javafx.scene.paint.Color;
-import org.axazeano.effects.BaseEffect;
+import org.axazeano.ARGBColor;
+import org.axazeano.EditableImage;
 
 /**
  * Created by vladimir on 24.05.2016.
@@ -12,29 +12,28 @@ public class LinearCorrection extends FunctionalCorrection {
         name = "Linear Correction";
     }
 
-    @Override
-    protected void preEvaluating() {
-        coefRed = (maxRed - minRed) / 255;
-        coefGreen = (maxGreen - minGreen) / 255;
-        coefBlue = (maxBlue - minBlue) / 255;
+    public LinearCorrection(EditableImage image) {
+        super(image);
     }
 
     @Override
-    public void proceedEffect(){
-        super.proceedEffect();
-        int resultRed = 0;
-        int resultGreen = 0;
-        int resultBlue = 0;
+    protected void prepareEvaluatingCoefficients() {
+        redCoefficient = (maxRed - minRed) / 255;
+        greenCoefficient = (maxGreen - minGreen) / 255;
+        blueCoefficient = (maxBlue - minBlue) / 255;
+    }
 
+    @Override
+    public int[] performEffect() {
         for (int y=0; y < selection.getHeight(); y++) {
             for (int x=0; x < selection.getWidth(); x++) {
-                Color currentPixel = pixelReader.getColor(x, y);
-                resultRed = (int) ((currentPixel.getRed() * 255 - minRed) * coefRed);
-                resultGreen = (int) ((currentPixel.getGreen() * 255 - minGreen) * coefGreen);
-                resultBlue = (int) ((currentPixel.getBlue() * 255 - minBlue) * coefBlue);
-
-                pixelWriter.setColor(x, y, Color.rgb(resultRed, resultGreen, resultBlue));
+                ARGBColor color = new ARGBColor(sourcePixelArray[x + y * inputImage.getWeight()]);
+                color.setRed((int) ((color.getRed() * 255 - minRed) * redCoefficient));
+                color.setGreen((int) ((color.getRed() * 255 - minRed) * redCoefficient));
+                color.setBlue((int) ((color.getBlue() * 255 - minBlue) * blueCoefficient));
+                targetPixelArray[x + y * inputImage.getWeight()] = color.getColor();
             }
         }
+        return targetPixelArray;
     }
 }
