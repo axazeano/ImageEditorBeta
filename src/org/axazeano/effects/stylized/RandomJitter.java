@@ -1,7 +1,6 @@
 package org.axazeano.effects.stylized;
 
-import javafx.scene.paint.Color;
-import org.axazeano.effects.BaseEffect;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffectOneParam;
 
 import java.util.Random;
@@ -21,8 +20,8 @@ public class RandomJitter extends BaseEffectOneParam {
     private Random random;
 
 
-    public RandomJitter() {
-        super();
+    public RandomJitter(EditableImage inputImage) {
+        super(inputImage);
         random = new Random();
     }
 
@@ -31,7 +30,7 @@ public class RandomJitter extends BaseEffectOneParam {
         this.half = (int) Math.floor(degree / 2.0);
     }
 
-    @Override
+
     protected void proceedEffect() {
         for (int x = selection.getStartX(); x < selection.getWidth(); x++) {
             for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
@@ -50,9 +49,14 @@ public class RandomJitter extends BaseEffectOneParam {
                     newY = newY + y;
                 }
 
-                Color color = pixelReader.getColor(x, y);
-                pixelWriter.setColor(newX, newY, color);
+//                Color color = pixelReader.getColor(x, y);
+//                pixelWriter.setColor(newX, newY, color);
             }
         }
+    }
+
+    @Override
+    public void setValues() {
+
     }
 }

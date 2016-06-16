@@ -1,6 +1,6 @@
 package org.axazeano.effects.colorCorrection;
 
-import javafx.scene.paint.Color;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffectOneParam;
 import org.axazeano.history.HistoryHolder;
 
@@ -11,7 +11,10 @@ import org.axazeano.history.HistoryHolder;
 public class Otsu extends BaseEffectOneParam {
     private HistoryHolder histogram = HistoryHolder.INSTANCE;
 
-    @Override
+    public Otsu(EditableImage image) {
+        super(image);
+    }
+
     public void applyEffect() {
         int numberOfFragmentsMultiplier = 1;
         int horizontalStep = (selection.getWidth() - selection.getStartX()) / numberOfFragmentsMultiplier;
@@ -27,10 +30,10 @@ public class Otsu extends BaseEffectOneParam {
                 for (int xx = selection.getStartX() + x; xx < selection.getStartX() + x + horizontalStep; xx++) {
                     for (int yy = selection.getStartY() + y; yy < selection.getStartY() + y + verticalStep; yy++) {
                         // Getting current pixel.
-                        Color currentPixel = pixelReader.getColor(xx, yy);
+//                        Color currentPixel = pixelReader.getColor(xx, yy);
 
                         // Counting its grayscale tone.
-                        int pixelGrayscale = (int) (currentPixel.getBrightness() * 255);
+                        int pixelGrayscale = 4;//(int) (currentPixel.getBrightness() * 255);
 
                         // Updating local min and max.
                         if (pixelGrayscale > maxHalftone) {
@@ -43,5 +46,10 @@ public class Otsu extends BaseEffectOneParam {
                     }
                 }
             }
+    }
+
+    @Override
+    public void setValues() {
+
     }
 }

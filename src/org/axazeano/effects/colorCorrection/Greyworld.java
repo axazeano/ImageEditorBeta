@@ -1,13 +1,14 @@
 package org.axazeano.effects.colorCorrection;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import org.axazeano.ARGBColor;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffect;
+import org.axazeano.effects.EffectInterface;
 
 /**
  * Created by vladimir on 16.05.2016.
  */
-public class Greyworld extends BaseEffect {
+public class Greyworld extends BaseEffect implements EffectInterface {
 
     private double redSum, greenSum, blueSum;
     private double redGlobal, greenGlobal, blueGlobal;
@@ -20,24 +21,26 @@ public class Greyworld extends BaseEffect {
         description = "Grey world normalization";
     }
 
-    public Greyworld() {
-        super();
+    public Greyworld(EditableImage inputImage) {
+        super(inputImage);
     }
 
+
     @Override
-    protected void proceedEffect() {
+    public int[] performEffect() {
         calculateDivValues();
         for (int y =  selection.getStartY(); y < selection.getHeight(); y++)
         {
             for (int x = selection.getStartX(); x < selection.getWidth(); x++)
             {
-                Color color = pixelReader.getColor(x, y);
-                redNew = (int)(color.getRed() * 256 * redDiv);
-                greenNew = (int)(color.getGreen() * 256 * greenDiv);
-                blueNew = (int)(color.getBlue() * 256 * blueDiv);
-                pixelWriter.setColor(x, y, Color.rgb(redNew, greenNew, blueNew));
+                ARGBColor color = new ARGBColor(sourcePixelArray[x + y * inputImage.getWeight()]);
+                color.setRed((int) (color.getRed() * redDiv));
+                color.setGreen((int) (color.getGreen() * greenDiv));
+                color.setBlue((int) (color.getBlue() * blueDiv));
+                targetPixelArray[x + y * inputImage.getWeight()] = color.getColor();
             }
         }
+        return targetPixelArray;
     }
 
     private void calculateSumValues()
@@ -46,10 +49,10 @@ public class Greyworld extends BaseEffect {
         {
             for (int x = selection.getStartX(); x < selection.getWidth(); x++)
             {
-                Color color = pixelReader.getColor(x, y);
-                redSum += (int) (color.getRed() * 256);
-                greenSum += (int) (color.getGreen() * 256);
-                blueSum += (int) (color.getBlue() * 256);
+                ARGBColor color = new ARGBColor(sourcePixelArray[x + y * inputImage.getWeight()]);
+                redSum += color.getRed();
+                greenSum += color.getGreen();
+                blueSum += color.getBlue();
             }
         }
     }
@@ -58,7 +61,7 @@ public class Greyworld extends BaseEffect {
     {
         calculateSumValues();
 
-        int size = (int) (history.getOriginalImage().getHeight() * history.getOriginalImage().getWidth());
+        int size = inputImage.getHeight() * inputImage.getWeight();
         redGlobal = 1d / size * redSum;
         greenGlobal = 1d / size * greenSum;
         blueGlobal = 1d / size * blueSum;

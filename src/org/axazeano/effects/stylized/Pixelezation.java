@@ -1,12 +1,14 @@
 package org.axazeano.effects.stylized;
 
-import javafx.scene.paint.Color;
+import org.axazeano.ARGBColor;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffectOneParam;
+import org.axazeano.effects.EffectInterface;
 
 /**
  * Created by vladimir on 24.05.2016.
  */
-public class Pixelezation extends BaseEffectOneParam {
+public class Pixelezation extends BaseEffectOneParam implements EffectInterface {
     static {
         name = "Pixelezation";
         description = "Pixelezation effect";
@@ -14,8 +16,8 @@ public class Pixelezation extends BaseEffectOneParam {
     }
     private int blocksCount;
 
-    public Pixelezation() {
-        super();
+    public Pixelezation(EditableImage inputImage) {
+        super(inputImage);
     }
 
     public void setValues(int blocksCount) {
@@ -23,7 +25,12 @@ public class Pixelezation extends BaseEffectOneParam {
     }
 
     @Override
-    protected void proceedEffect() {
+    public void setValues() {
+
+    }
+
+    @Override
+    public int[] performEffect() {
         for (int x = selection.getStartX(); x < selection.getWidth() / blocksCount; x++) {
             for (int y = selection.getStartY(); y < selection.getHeight() / blocksCount; y++) {
                 int totalRed = 0;
@@ -33,25 +40,27 @@ public class Pixelezation extends BaseEffectOneParam {
 
                 for (int xx = 0; xx < blocksCount; xx++) {
                     for (int yy = 0; yy < blocksCount; yy++, totalCount++) {
-                        Color currentPixel = pixelReader.getColor(x * blocksCount + xx, y * blocksCount + yy);
-                        totalRed += currentPixel.getRed() * 256;
-                        totalGreen += currentPixel.getGreen() * 256;
-                        totalBlue += currentPixel.getBlue() * 255;
+                        ARGBColor color = new ARGBColor(sourcePixelArray[x * blocksCount + xx +
+                                (y * blocksCount + yy) * inputImage.getWeight()]);
+                        totalRed += color.getRed();
+                        totalGreen += color.getGreen();
+                        totalBlue += color.getBlue();
                     }
                 }
 
-                totalRed /= totalCount;
-                totalGreen /= totalCount;
-                totalBlue /= totalCount;
+                ARGBColor color = new ARGBColor();
+                color.setRed(totalRed /= totalCount);
+                color.setGreen(totalGreen /= totalCount);
+                color.setBlue(totalBlue /= totalCount);
 
                 for (int xx = 0; xx < blocksCount; xx++) {
                     for (int yy = 0; yy < blocksCount; yy++) {
-                        pixelWriter.setColor(x * blocksCount + xx,
-                                y * blocksCount + yy,
-                                Color.rgb(totalRed, totalGreen, totalBlue));
+                        targetPixelArray[x * blocksCount + xx +
+                                (y * blocksCount + yy) * inputImage.getWeight()] = color.getColor();
                     }
                 }
             }
         }
+        return targetPixelArray;
     }
 }

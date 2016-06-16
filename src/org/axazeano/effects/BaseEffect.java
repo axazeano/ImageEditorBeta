@@ -1,29 +1,22 @@
 package org.axazeano.effects;
 
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
-import org.axazeano.history.HistoryHolder;
-import org.axazeano.history.HistoryItem;
-
-import java.nio.IntBuffer;
+import org.axazeano.EditableImage;
 
 /**
  * Created by vladimir on 15.05.2016.
  */
 public abstract class BaseEffect {
     protected Selection selection = Selection.INSTANCE;
+    protected EditableImage inputImage;
+    protected int[] sourcePixelArray;
+    protected int[] targetPixelArray;
 
-    public static String description ;
-    public static String name ;
+    public static String description;
+    public static String name;
 
-    public BaseEffect() {
+    public BaseEffect(EditableImage image) {
+        inputImage = image;
+        sourcePixelArray = inputImage.getPixelsArray();
+        targetPixelArray = inputImage.getPixelsArray();
     }
-
-    public void applyEffect() {
-        proceedEffect();
-    }
-
-    abstract protected void proceedEffect();
 }

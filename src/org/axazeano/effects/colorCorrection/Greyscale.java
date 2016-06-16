@@ -1,33 +1,36 @@
 package org.axazeano.effects.colorCorrection;
 
 
-
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import org.axazeano.ARGBColor;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffect;
+import org.axazeano.effects.EffectInterface;
 
 /**
  * Created by vladimir on 15.05.2016.
  */
-public class Greyscale extends BaseEffect {
+public class Greyscale extends BaseEffect implements EffectInterface {
 
     static {
         description = "Convert image to greyscale format";
         name = "Greyscale";
     }
 
-    public Greyscale() {
-        super();
+    public Greyscale(EditableImage image) {
+        super(image);
     }
 
     @Override
-    protected void proceedEffect() {
-        for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
-            for (int x = selection.getStartX(); x < selection.getWidth(); x++) {
-                Color originalColor = pixelReader.getColor(x, y);
-                int newColorValue = (int) ((originalColor.getRed() + originalColor.getGreen() + originalColor.getBlue()) / 3 * 255);
-                pixelWriter.setColor(x, y, Color.rgb(newColorValue, newColorValue, newColorValue));
-            }
+    public int[] performEffect() {
+        int[] pixelsArray = this.inputImage.getPixelsArray();
+
+        for (int i = 0; i < pixelsArray.length; i++) {
+            ARGBColor color = new ARGBColor(pixelsArray[i]);
+            color.setRed((int) (color.getRed() * 0.2989));
+            color.setGreen((int) (color.getGreen() * 0.5870));
+            color.setBlue((int) (color.getBlue() * 0.1140));
+            pixelsArray[i] = color.getColor();
         }
+        return pixelsArray;
     }
 }

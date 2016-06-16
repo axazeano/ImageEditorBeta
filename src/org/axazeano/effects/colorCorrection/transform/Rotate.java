@@ -1,11 +1,13 @@
 package org.axazeano.effects.colorCorrection.transform;
 
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffectOneParam;
+import org.axazeano.effects.EffectInterface;
 
 /**
  * Created by vladimir on 17.05.2016.
  */
-public class Rotate extends BaseEffectOneParam{
+public class Rotate extends BaseEffectOneParam implements EffectInterface {
     private double degrees;
     private int centerX;
     private int centerY;
@@ -16,8 +18,8 @@ public class Rotate extends BaseEffectOneParam{
         firstParameter = "Angle";
     }
 
-    public Rotate() {
-        super();
+    public Rotate(EditableImage inputImage) {
+        super(inputImage);
         centerX = selection.getWidth() / 2;
         centerY = selection.getHeight() / 2;
     }
@@ -27,7 +29,12 @@ public class Rotate extends BaseEffectOneParam{
     }
 
     @Override
-    protected void proceedEffect() {
+    public void setValues() {
+        this.degrees = degrees;
+    }
+
+    @Override
+    public int[] performEffect() {
         for (int y = selection.getStartY(); y < selection.getHeight(); ++y)
         {
             for (int x = selection.getStartX(); x < selection.getWidth(); ++x)
@@ -36,9 +43,10 @@ public class Rotate extends BaseEffectOneParam{
                 if (newX >= selection.getWidth() || newX < 0) { continue; }
                 int newY = (int) (Math.sin(degrees) * (x - centerX) + Math.cos(degrees) * (y - centerY) + centerY);
                 if (newY >= selection.getHeight() || newY < 0) { continue; }
-
-                pixelWriter.setColor(newX, newY, pixelReader.getColor(x, y));
+                targetPixelArray[newX + newY * inputImage.getWeight()] =
+                        sourcePixelArray[x + y * inputImage.getWeight()];
             }
         }
+        return targetPixelArray;
     }
 }
