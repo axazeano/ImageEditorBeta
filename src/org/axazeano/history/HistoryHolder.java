@@ -23,7 +23,10 @@ public class HistoryHolder extends Observable {
     public void init(Image image) {
         clean();
         EditableImage editableImage = new EditableImage(image);
-        add(new HistoryItem("Init", editableImage, false));
+        history.add(new HistoryItem("Init", editableImage, false));
+//        history.set(0, new HistoryItem("Init", editableImage, false));
+        setChanged();
+        notifyObservers();
     }
 
     public void undo() {
@@ -56,10 +59,10 @@ public class HistoryHolder extends Observable {
     }
 
     public void clean() {
-        head = -1;
+        head = 0;
         history.clear();
-        setChanged();
-        notifyObservers();
+//        setChanged();
+//        notifyObservers();
     }
 
     public void removeCurrentElement() {
