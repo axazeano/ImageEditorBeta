@@ -31,7 +31,7 @@ public class LogCorrection extends FunctionalCorrection {
                 color.setRed((int) Math.log((color.getRed() * 255) * redCoefficient));
                 color.setGreen((int) Math.log((color.getGreen() * 255) * greenCoefficient));
                 color.setBlue((int) Math.log((color.getBlue() * 255) * blueCoefficient));
-                sourcePixelArray[x + y * inputImage.getWeight()] = color.getColor();
+                targetPixelArray[x + y * inputImage.getWeight()] = color.getColor();
             }
         }
         return targetPixelArray;
