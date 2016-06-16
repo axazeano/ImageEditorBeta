@@ -1,12 +1,10 @@
 package org.axazeano.effects.stylized;
 
 import javafx.scene.paint.Color;
-import org.axazeano.effects.BaseEffect;
+import org.axazeano.EditableImage;
 import org.axazeano.effects.BaseEffectThreeParam;
-
+import org.axazeano.effects.EffectInterface;
 import java.util.Random;
-
-import static org.bytedeco.javacpp.avutil.M_PI;
 
 /**
  * Created by vladimir on 01.06.2016.
@@ -16,38 +14,55 @@ import static org.bytedeco.javacpp.avutil.M_PI;
 /**
  * Wave effects
  */
-public class Waves extends BaseEffectThreeParam {
+public class Waves extends BaseEffectThreeParam implements EffectInterface {
     static {
         name = "Waves";
-        description = "Waves efffect";
+        description = "Waves effect";
         firstParameter = "Count";
         secondParameter = "Strength";
         thirdParameter = "Type";
     }
+
     public enum WaveType {
         Horizontal,
         Vertical,
         ZigZag
     }
 
-
     /**
      * Count of waves
      */
-    private int count;
+    private int count = 10;
     /**
      * Strength of waves
      */
-    private int strength;
+    private int strength = 10;
     /**
      * Type of waves. Can be Horizontal, Vertical, ZigZag
      */
-    private WaveType waveType;
+    private WaveType waveType = WaveType.Horizontal;
+
     private Random random;
 
+    @Override
+    public int[] performEffect() {
+        switch (waveType) {
+            case Horizontal:
+                Horizontal();
+                break;
+            case Vertical:
+                Vertical();
+                break;
+            case ZigZag:
+                ZigZag();
+                break;
+        }
+        return targetPixelArray;
+    }
 
-    public Waves() {
-        super();
+
+    public Waves(EditableImage inputImage) {
+        super(inputImage);
         random = new Random();
     }
 
@@ -57,33 +72,15 @@ public class Waves extends BaseEffectThreeParam {
         this.waveType = waveType;
     }
 
-    @Override
-    protected void proceedEffect() {
-        for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
-            for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
-                switch (waveType) {
-                    case Horizontal:
-                        Horizontal();
-                        break;
-                    case Vertical:
-                        Vertical();
-                        break;
-                    case ZigZag:
-                        ZigZag();
-                        break;
-                }
-            }
-        }
-    }
-
     private void Horizontal() {
         int newCoordinate;
         for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
             for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
-                newCoordinate = (int) (x + strength * Math.sin(2 * M_PI * y / count));
-                Color color  = pixelReader.getColor(x, y);
-                if (newCoordinate < selection.getHeight() && newCoordinate >= selection.getStartY()) // out of bounds checks
-                    pixelWriter.setColor(x, y, color);
+                newCoordinate = (int) (x + strength * Math.sin(2 * Math.PI * y / count));
+                int color = sourcePixelArray[x + y * selection.getWidth()];
+                if (newCoordinate < selection.getHeight() && newCoordinate >= selection.getStartY()) {
+                    targetPixelArray[x + newCoordinate * inputImage.getWeight()] = color;
+                }
             }
         }
     }
@@ -92,49 +89,49 @@ public class Waves extends BaseEffectThreeParam {
         int newCoordinate;
         for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
             for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
-                newCoordinate = (int) (y + strength * Math.sin(2 * M_PI * x / count));
-                Color color  = pixelReader.getColor(x, y);
-                if (newCoordinate < selection.getWidth() && newCoordinate >= selection.getStartX()) // out of bounds checks
-                    pixelWriter.setColor(x, y, color);
+                newCoordinate = (int) (y + strength * Math.sin(2 * Math.PI * x / count));
+                int color = sourcePixelArray[x + y * selection.getWidth()];
+                if (newCoordinate < selection.getWidth() && newCoordinate >= selection.getStartX()) {
+                    targetPixelArray[newCoordinate + y * inputImage.getWeight()] = color;
+                }
             }
         }
-
     }
 
     private void ZigZag() {
         int newCoordinate;
         for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
             for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
-                newCoordinate = (int) (y + strength * Math.cos(2 * M_PI * x / count));
-                Color color  = pixelReader.getColor(x, y);
-                if (newCoordinate < selection.getWidth() && newCoordinate >= selection.getStartX()) // out of bounds checks
-                    pixelWriter.setColor(x, y, color);
+                newCoordinate = (int) (y + strength * Math.cos(2 * Math.PI * x / count));
+                int color = sourcePixelArray[x + y * selection.getWidth()];
+                if (newCoordinate < selection.getWidth() && newCoordinate >= selection.getStartX())
+                    targetPixelArray[newCoordinate + y * inputImage.getWeight()] = color;
             }
         }
         approximateZigZag();
     }
 
     private void approximateZigZag() {
-        for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
-            for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
-
-                // Getting color of current pixel
-                Color color = pixelReader.getColor(x, y);
-
-                // Looking for empty pixels.
-                if (color.getOpacity() == 0) {
-                    // Approximating this pixel.
-                    int coordinateOfSource = (int) (x - this.strength * Math.cos(2 * M_PI * x / this.count));
-                    // Out of bounds check.
-                    if (coordinateOfSource >= selection.getWidth() || coordinateOfSource < 0 ||
-                            y >= selection.getHeight() || y < 0)
-                        continue;
-
-                    // Applying approximation for pixel.
-                    color = pixelReader.getColor(coordinateOfSource, y);
-                    pixelWriter.setColor(x, y, color);
-                }
-            }
-        }
+//        for (int y = selection.getStartY(); y < selection.getHeight(); y++) {
+//            for (int x = selection.getStartX(); y < selection.getWidth(); x++) {
+//
+//                // Getting color of current pixel
+//                Color color = pixelReader.getColor(x, y);
+//
+//                // Looking for empty sourceImagePixels.
+//                if (color.getOpacity() == 0) {
+//                    // Approximating this pixel.
+//                    int coordinateOfSource = (int) (x - this.strength * Math.cos(2 * Math.PI * x / this.count));
+//                    // Out of bounds check.
+//                    if (coordinateOfSource >= selection.getWidth() || coordinateOfSource < 0 ||
+//                            y >= selection.getHeight() || y < 0)
+//                        continue;
+//
+//                    // Applying approximation for pixel.
+//                    color = pixelReader.getColor(coordinateOfSource, y);
+//                    pixelWriter.setColor(x, y, color);
+//                }
+//            }
+//        }
     }
 }
