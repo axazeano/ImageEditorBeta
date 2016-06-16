@@ -20,6 +20,12 @@ public class HistoryHolder extends Observable {
         head = -1;
     }
 
+    public void init(Image image) {
+        clean();
+        EditableImage editableImage = new EditableImage(image);
+        add(new HistoryItem("Init", editableImage, false));
+    }
+
     public void undo() {
         if (head < 0) {
             throw new UnderflowException();
@@ -49,8 +55,8 @@ public class HistoryHolder extends Observable {
         notifyObservers();
     }
 
-    public void clear() {
-        head = 0;
+    public void clean() {
+        head = -1;
         history.clear();
         setChanged();
         notifyObservers();
