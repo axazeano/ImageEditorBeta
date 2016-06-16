@@ -1,6 +1,7 @@
 package org.axazeano.effects.colorCorrection;
 
-import javafx.scene.paint.Color;
+import org.axazeano.ARGBColor;
+import org.axazeano.EditableImage;
 
 /**
  * Created by vladimir on 01.06.2016.
@@ -11,31 +12,28 @@ public class LogCorrection extends FunctionalCorrection {
         name = "Log correction";
     }
 
-    @Override
-    protected void preEvaluating() {
-        coefRed = maxRed / 2.412;
-        coefGreen = maxGreen / 2.412;
-        coefBlue = maxBlue / 2.412;
+    public LogCorrection(EditableImage image) {
+        super(image);
     }
 
     @Override
-    public void proceedEffect(){
-        super.proceedEffect();
-        int resultRed;
-        int resultGreen;
-        int resultBlue;
+    protected void prepareEvaluatingCoefficients() {
+        redCoefficient = maxRed / 2.412;
+        greenCoefficient = maxGreen / 2.412;
+        blueCoefficient = maxBlue / 2.412;
+    }
 
+    @Override
+    public int[] performEffect() {
         for (int y=0; y < selection.getHeight(); y++) {
             for (int x=0; x < selection.getWidth(); x++) {
-                Color currentPixel = pixelReader.getColor(x, y);
-                resultRed = (int) Math.log((currentPixel.getRed() * 255) * coefRed);
-                resultGreen = (int) Math.log((currentPixel.getGreen() * 255) * coefGreen);
-                resultBlue = (int) Math.log((currentPixel.getBlue() * 255) * coefBlue);
-
-                pixelWriter.setColor(x, y, Color.rgb(resultRed < 256 ? resultRed : 255,
-                        resultGreen < 256 ? resultGreen : 255,
-                        resultBlue < 255 ? resultBlue : 255));
+                ARGBColor color = new ARGBColor(sourcePixelArray[x + y * inputImage.getWeight()]);
+                color.setRed((int) Math.log((color.getRed() * 255) * redCoefficient));
+                color.setGreen((int) Math.log((color.getGreen() * 255) * greenCoefficient));
+                color.setBlue((int) Math.log((color.getBlue() * 255) * blueCoefficient));
+                sourcePixelArray[x + y * inputImage.getWeight()] = color.getColor();
             }
         }
+        return targetPixelArray;
     }
 }
