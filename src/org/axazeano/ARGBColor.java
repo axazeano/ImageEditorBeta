@@ -6,8 +6,6 @@ package org.axazeano;
 public class ARGBColor {
     public static final int COLOR_MAX_VALUE = 255;
     public static final int COLOR_MIN_VALUE = 0;
-    public static final int ALPHA_MAX_VALUE = 99;
-    public static final int ALPHA_MIN_VALUE = 0;
     private int color = 0;
     private int red;
     private int green;
@@ -75,10 +73,10 @@ public class ARGBColor {
     }
 
     public void setAlpha(int alpha) {
-        if (alpha > ALPHA_MAX_VALUE) {
-            this.alpha = ALPHA_MAX_VALUE;
-        } else if (alpha < ALPHA_MIN_VALUE) {
-            this.alpha = ALPHA_MIN_VALUE;
+        if (alpha > COLOR_MAX_VALUE) {
+            this.alpha = COLOR_MAX_VALUE;
+        } else if (alpha < COLOR_MIN_VALUE) {
+            this.alpha = COLOR_MIN_VALUE;
         } else {
             this.alpha = alpha;
         }
@@ -99,16 +97,16 @@ public class ARGBColor {
     }
 
     private void checkColors() {
-        if (((color>>16)&0xFF) > 255) {
+        if (((color >> 16) & 0xFF) > COLOR_MAX_VALUE) {
             throw new ColorOutOfRange();
         }
-        if (((color>>8)&0xFF) > 255) {
+        if (((color >> 8) & 0xFF) > COLOR_MAX_VALUE) {
             throw new ColorOutOfRange();
         }
-        if (((color)&0xFF) > 255) {
+        if (((color) & 0xFF) > COLOR_MAX_VALUE) {
             throw new ColorOutOfRange();
         }
-        if (((color>>24)&0xFF) > 99) {
+        if (((color >> 24) & 0xFF) > COLOR_MAX_VALUE) {
             throw new ColorOutOfRange();
         }
     }
